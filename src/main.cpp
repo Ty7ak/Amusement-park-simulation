@@ -60,6 +60,8 @@ int main(int argc, char **argv)
     }
     endwin(); 
 
+    std::cout << "test";
+
     return 0;
 }
     

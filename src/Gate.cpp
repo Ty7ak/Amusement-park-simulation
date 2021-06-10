@@ -9,3 +9,4 @@ Gate::Gate(ParkingLot &parkingLot)
 {
     emptySpots = parkingLot.parkingSpots.size();
 }
+
