@@ -8,4 +8,5 @@ class ParkingLot
     public:
         std::vector<ParkingSpot*> parkingSpots;
         ParkingLot(int count);
+        int emptySpots = 0;
 };

@@ -7,5 +7,6 @@ ParkingLot::ParkingLot(int count)
     {
         ParkingSpot *parkingSpot = new ParkingSpot();
         parkingSpots.push_back(parkingSpot);
+        emptySpots++;
     }
 }

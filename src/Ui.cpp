@@ -52,14 +52,7 @@ void Ui::update()
                 attroff(COLOR_PAIR(1));
                 clrtoeol();
             }
-            else if(p->action == VisitorAction::Thinking)
-            {
-                attron(COLOR_PAIR(2));
-                mvprintw(4 + p->id, 0,"Visitor %d is thinking", p->id);
-                mvprintw(4 + p->id, 50," progress: %d %%", p->progress);
-                attroff(COLOR_PAIR(2));
-                clrtoeol();
-            }
+
             else if(p->action == VisitorAction::Dining)
             {
                 attron(COLOR_PAIR(3));

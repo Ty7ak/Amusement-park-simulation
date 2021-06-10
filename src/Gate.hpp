@@ -6,11 +6,7 @@
 class Gate
 {
     public: 
-        std::condition_variable cv_leftParking;
-        std::condition_variable cv_enteredParking;
-        std::mutex queueMutex;
-        int emptySpots;
-
-        Gate(ParkingLot &parkingLot);
-
+        std::condition_variable cv;
+        std::mutex m;
+ 
 };

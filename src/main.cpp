@@ -17,9 +17,9 @@ bool end = false;
 
 int main(int argc, char **argv)
 {
-    if (argc < 4) {
+    if (argc < 3) {
 
-        std::cout << "Required args = Number of Visitors | Thinking Time | Eating time" << std::endl;
+        std::cout << "Required args = Number of Visitors | Eating time" << std::endl;
         return 3;
     }
     else {
@@ -28,10 +28,7 @@ int main(int argc, char **argv)
         count = std::stoi(arg1);
 
         std::string arg2(argv[2]);
-        thinkTime = std::stoi(arg2);
-
-        std::string arg3(argv[3]);
-        dineTime = std::stoi(arg3);
+        dineTime = std::stoi(arg2);
     }
 
     for(auto i = 0; i < count; i++)
@@ -42,11 +39,11 @@ int main(int argc, char **argv)
 
     ParkingLot *parkingLot = new ParkingLot(count);
 
-    Gate *gate = new Gate(*parkingLot);
+    Gate *gate = new Gate();
     
-    for(auto i = 0; i < count ; i++)
+    for(auto i = 0; i < count+2 ; i++)
     {
-        Visitor *p = new Visitor(i + 1, thinkTime, dineTime, *parkingLot->parkingSpots[i]);
+        Visitor *p = new Visitor(i + 1, dineTime, *parkingLot, *gate);
         visitors.push_back(p);
     }
 
@@ -59,8 +56,6 @@ int main(int argc, char **argv)
         p->t.join();
     }
     endwin(); 
-
-    std::cout << "test";
 
     return 0;
 }
