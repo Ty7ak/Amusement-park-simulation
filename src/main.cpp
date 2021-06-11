@@ -9,7 +9,9 @@
 #include "Ui.hpp"
 #include "ParkingSpot.hpp"
 
-int count, thinkTime, dineTime;
+int parkTime = 2;
+int stuffTime = 5;
+int count;
 
 std::vector<Visitor *> visitors;
 std::vector<ParkingSpot *> parkingSpots;
@@ -17,9 +19,9 @@ bool end = false;
 
 int main(int argc, char **argv)
 {
-    if (argc < 3) {
+    if (argc < 2) {
 
-        std::cout << "Required args = Number of Visitors | Eating time" << std::endl;
+        std::cout << "Required args = Number of Visitors" << std::endl;
         return 3;
     }
     else {
@@ -27,8 +29,6 @@ int main(int argc, char **argv)
         std::string arg1(argv[1]);
         count = std::stoi(arg1);
 
-        std::string arg2(argv[2]);
-        dineTime = std::stoi(arg2);
     }
 
     for(auto i = 0; i < count; i++)
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     
     for(auto i = 0; i < count+2 ; i++)
     {
-        Visitor *p = new Visitor(i + 1, dineTime, *parkingLot, *gate);
+        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate);
         visitors.push_back(p);
     }
 

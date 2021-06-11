@@ -11,15 +11,17 @@
 
 enum class VisitorAction
 {
-    Dining,
-    waitingForSpots   
+    Parking,
+    waitingForSpots,
+    doingStuff   
 };
 
 class Visitor
 {
     public:
         int id;
-        int dineTime;
+        int parkTime;
+        int stuffTime;
         ParkingLot &parkingLot;
         Gate &gate;
         ParkingSpot *parkingSpot;
@@ -31,9 +33,10 @@ class Visitor
         bool hasParking = false;
         bool exit = false;
 
-        Visitor(int i, int et, ParkingLot &lot, Gate &g): id(i), dineTime(et), parkingLot(lot), gate(g), t(&Visitor::live, this) {};
+        Visitor(int i, int pt, int st, ParkingLot &lot, Gate &g): id(i), parkTime(pt), stuffTime(st), parkingLot(lot), gate(g), t(&Visitor::live, this) {};
         void live();
-        void park(int dineTime);
+        void park(int parkTime);
         void waitParking();
+        void doStuff(int stuffTime);
     
 };

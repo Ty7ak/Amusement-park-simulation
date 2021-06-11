@@ -53,14 +53,23 @@ void Ui::update()
                 clrtoeol();
             }
 
-            else if(p->action == VisitorAction::Dining)
+            else if(p->action == VisitorAction::Parking)
             {
                 attron(COLOR_PAIR(3));
                 mvprintw(4 + p->id, 0,"Visitor %d is parking", p->id);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(3));
                 clrtoeol();
-            }          
+            }
+
+            else if(p->action == VisitorAction::doingStuff)
+            {
+                attron(COLOR_PAIR(2));
+                mvprintw(4 + p->id, 0,"Visitor %d is doingStuff", p->id);
+                mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
+                attroff(COLOR_PAIR(2));
+                clrtoeol();
+            }                
             refresh();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
