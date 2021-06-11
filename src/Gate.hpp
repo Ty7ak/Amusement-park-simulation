@@ -7,6 +7,7 @@ class Gate
 {
     public: 
         std::condition_variable cv;
-        std::mutex m;
+        std::mutex m_entry;
+        std::mutex m_leave;
  
 };

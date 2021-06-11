@@ -9,7 +9,7 @@
 #include "Ui.hpp"
 #include "ParkingSpot.hpp"
 
-int parkTime = 2;
+int parkTime = 1;
 int stuffTime = 5;
 int count;
 
