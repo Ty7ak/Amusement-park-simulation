@@ -9,6 +9,8 @@ void Visitor::live()
         waitParking();
         park(parkTime);
         doStuff(stuffTime);
+        leaveParking(parkTime);
+        exit=true;
     }
 }
 
@@ -78,6 +80,26 @@ void Visitor::doStuff(int time)
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+void Visitor::leaveParking(int time)
+{
+    action = VisitorAction::Leaving;
+    int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
+    for(auto i = 1; i < part; i++)
+    {
+        if(exit)
+        {
+            return;
+        }
+
+        progress = ((double)i/part) * 100; 
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
 
     /*
     parkingSpot->mtx.unlock();
@@ -85,5 +107,6 @@ void Visitor::doStuff(int time)
     gate.cv.notify_all();
     parkingLot.emptySpots++;
     */
+
 }
 

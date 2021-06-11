@@ -13,7 +13,8 @@ enum class VisitorAction
 {
     Parking,
     waitingForSpots,
-    doingStuff   
+    doingStuff,
+    Leaving   
 };
 
 class Visitor
@@ -38,5 +39,6 @@ class Visitor
         void park(int parkTime);
         void waitParking();
         void doStuff(int stuffTime);
+        void leaveParking(int parkTime);
     
 };

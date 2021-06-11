@@ -14,6 +14,7 @@ Ui::Ui(std::vector<Visitor *> p)
     init_pair(1, COLOR_RED, -1);
     init_pair(2, COLOR_CYAN, -1);
     init_pair(3, COLOR_GREEN, -1);
+    init_pair(4, COLOR_MAGENTA, -1);
 }
 
 Ui::~Ui()
@@ -65,11 +66,19 @@ void Ui::update()
             else if(p->action == VisitorAction::doingStuff)
             {
                 attron(COLOR_PAIR(2));
-                mvprintw(4 + p->id, 0,"Visitor %d is doingStuff", p->id);
+                mvprintw(4 + p->id, 0,"Visitor %d is doing Stuff", p->id);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(2));
                 clrtoeol();
-            }                
+            }
+            else if(p->action == VisitorAction::Leaving)
+            {
+                attron(COLOR_PAIR(4));
+                mvprintw(4 + p->id, 0,"Visitor %d is leaving Parking", p->id);
+                mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
+                attroff(COLOR_PAIR(4));
+                clrtoeol();
+            }                 
             refresh();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
