@@ -1,6 +1,7 @@
 #pragma once
 #include "Visitor.hpp"
 #include "ParkingSpot.hpp"
+#include <iostream>
 
 void Visitor::live()
 {
@@ -23,12 +24,15 @@ void Visitor::waitParking()
         return;
     }
 
-    /*
+    
     std::unique_lock<std::mutex> wait_lock(gate.m);
     gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0;});
 
+    
     for(ParkingSpot* spot : parkingLot.parkingSpots)
     {
+        //std::cout << "dupa";
+        /*
         if(spot->mtx.try_lock())
         {
         parkingSpot->mtx.lock();
@@ -38,8 +42,10 @@ void Visitor::waitParking()
         parkingSpot = spot;
         return;  
         }
+        */
     }
-    */
+    parkingLot.emptySpots--;
+    
 
 }
 
@@ -99,7 +105,8 @@ void Visitor::leaveParking(int time)
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
+    parkingLot.emptySpots++;
+    gate.cv.notify_all();
 
     /*
     parkingSpot->mtx.unlock();
