@@ -28,28 +28,22 @@ void Visitor::waitParking()
     std::unique_lock<std::mutex> wait_lock(gate.m_entry);
     gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0;});
 
-    
-    for(ParkingSpot* spot : parkingLot.parkingSpots)
-    {
-
-        /*
-        if(spot->mtx.try_lock())
-        {
-        parkingSpot->mtx.lock();
-        
-        parkingSpot = spot;
-        return;  
-        }
-        */
-    }
     parkingLot.emptySpots--;
     
-
 }
 
 void Visitor::park(int time)
 {
     std::unique_lock<std::mutex> parked_lock(gate.m_entry);
+
+    for(ParkingSpot* spot : parkingLot.parkingSpots)
+    {        
+        if(spot->mtx.try_lock())
+        {
+        parkingSpot = spot;
+        break;
+        }
+    }
 
     action = VisitorAction::Parking;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
@@ -106,13 +100,8 @@ void Visitor::leaveParking(int time)
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     
+    parkingSpot->mtx.unlock();
     parkingLot.emptySpots++;
     gate.cv.notify_all();
-
-    /*
-    parkingSpot->mtx.unlock();
-    hasParking = false;
-    */
-
 }
 

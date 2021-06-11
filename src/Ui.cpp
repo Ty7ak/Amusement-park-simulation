@@ -67,6 +67,7 @@ void Ui::update()
             {
                 attron(COLOR_PAIR(2));
                 mvprintw(4 + p->id, 0,"Visitor %d is doing Stuff", p->id);
+                mvprintw(4 + p->id, 40, "id: %d", p->parkingSpot->id);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(2));
                 clrtoeol();

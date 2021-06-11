@@ -9,8 +9,8 @@
 #include "Ui.hpp"
 #include "ParkingSpot.hpp"
 
-int parkTime = 1;
-int stuffTime = 5;
+int parkTime = 0.5;
+int stuffTime = 10;
 int count;
 
 std::vector<Visitor *> visitors;
@@ -29,12 +29,6 @@ int main(int argc, char **argv)
         std::string arg1(argv[1]);
         count = std::stoi(arg1);
 
-    }
-
-    for(auto i = 0; i < count; i++)
-    {
-        ParkingSpot *parkingSpot = new ParkingSpot();
-        parkingSpots.push_back(parkingSpot);
     }
 
     ParkingLot *parkingLot = new ParkingLot(count);
