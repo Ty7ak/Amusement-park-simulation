@@ -15,6 +15,7 @@ Ui::Ui(std::vector<Visitor *> p)
     init_pair(2, COLOR_CYAN, -1);
     init_pair(3, COLOR_GREEN, -1);
     init_pair(4, COLOR_MAGENTA, -1);
+    init_pair(5, COLOR_WHITE, -1);
 }
 
 Ui::~Ui()
@@ -40,6 +41,11 @@ void Ui::update()
         mvprintw(1, 18, "|    Maciej Tylak 248884    |");
         mvprintw(2, 18, "|---------------------------|");
         mvprintw(1, 60, "Press q to exit");  
+
+        attron(COLOR_PAIR(5));
+        mvprintw(3, 60, "Empty spots: %d", visitors[0]->parkingLot.emptySpots);
+        attroff(COLOR_PAIR(5));
+        clrtoeol();
 
         for(auto p : visitors)
         {
@@ -67,7 +73,7 @@ void Ui::update()
             {
                 attron(COLOR_PAIR(2));
                 mvprintw(4 + p->id, 0,"Visitor %d is doing Stuff", p->id);
-                mvprintw(4 + p->id, 40, "id: %d", p->parkingSpot->id);
+                mvprintw(4 + p->id, 40, "Spot #%d", p->parkingSpot->id+1);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(2));
                 clrtoeol();
