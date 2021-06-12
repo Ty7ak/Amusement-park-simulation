@@ -19,7 +19,6 @@ void TicketBooth::createTickets()
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    std::unique_lock<std::mutex> ticket_lock(mtx);
     for(int i = 0; i < ticketsPerResupply; i++)
     {
         Ticket *ticket = new Ticket();
@@ -29,7 +28,6 @@ void TicketBooth::createTickets()
     }
 
     cv.notify_all();
-    ticket_lock.unlock();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }

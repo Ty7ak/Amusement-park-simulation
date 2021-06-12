@@ -31,12 +31,12 @@ void Ui::update()
     {   
         int c = getch();
         if(c == 113)
-        {   
-            ticketBooth->exit = true;            
+        {             
             for(auto p : visitors)
             {
                 p->exit = true;
             }
+            ticketBooth->exit = true;  
             return;
             
         }

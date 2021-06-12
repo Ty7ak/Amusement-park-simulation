@@ -41,8 +41,7 @@ class Visitor
         std::mt19937 rng{std::random_device{}()};
         VisitorAction action;
         std::atomic<int> progress {0};
-
-        bool exit = false;
+        std::atomic<bool> exit {false};
 
         Visitor(int i, int pt, int st, ParkingLot &lot, Gate &g, TicketBooth &tb, Attraction &at): 
         id(i), parkTime(pt), rideTime(st), parkingLot(lot), gate(g), booth(tb), attraction(at), t(&Visitor::live, this) {};
@@ -55,5 +54,7 @@ class Visitor
         void waitAttraction();
         void getTickets(int parkTime);
         void leaveParking(int parkTime);
+
+        void shutdown();
     
 };
