@@ -75,10 +75,11 @@ void Ui::update()
                 clrtoeol();
             }
 
-             else if(p->action == VisitorAction::waitingForTickets)
+            else if(p->action == VisitorAction::waitingForTickets)
             {
                 attron(COLOR_PAIR(1));
                 mvprintw(4 + p->id, 0,"Visitor %d is waiting for a ticket", p->id);
+                mvprintw(4 + p->id, 70,"Rides left: %d", p->amountOfRides);
                 attroff(COLOR_PAIR(1));
                 clrtoeol();
             }
@@ -87,7 +88,18 @@ void Ui::update()
             {
                 attron(COLOR_PAIR(3));
                 mvprintw(4 + p->id, 0,"Visitor %d is getting a ticket", p->id);
+                mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
+                mvprintw(4 + p->id, 70,"Rides left: %d", p->amountOfRides);
                 attroff(COLOR_PAIR(3));
+                clrtoeol();
+            }
+
+            else if(p->action == VisitorAction::waitingForAttraction)
+            {
+                attron(COLOR_PAIR(1));
+                mvprintw(4 + p->id, 0,"Visitor %d is waiting for seats", p->id);
+                mvprintw(4 + p->id, 70,"Rides left: %d", p->amountOfRides);
+                attroff(COLOR_PAIR(1));
                 clrtoeol();
             }
 
@@ -97,6 +109,7 @@ void Ui::update()
                 mvprintw(4 + p->id, 0,"Visitor %d is having fun!", p->id);
                 mvprintw(4 + p->id, 40, "Spot #%d", p->parkingSpot->id+1);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
+                mvprintw(4 + p->id, 70,"Rides left: %d", p->amountOfRides);
                 attroff(COLOR_PAIR(2));
                 clrtoeol();
             }
@@ -107,6 +120,13 @@ void Ui::update()
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(4));
                 clrtoeol();
+                if(p->progress)
+                {
+                    attron(COLOR_PAIR(4));
+                    mvprintw(4 + p->id, 0,"Visitor %d has left the park", p->id);
+                    attroff(COLOR_PAIR(4));
+                    clrtoeol();    
+                }
             }                 
             refresh();
         }

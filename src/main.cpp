@@ -8,6 +8,7 @@
 #include "Visitor.hpp"
 #include "Ui.hpp"
 #include "ParkingSpot.hpp"
+#include "Attraction.hpp"
 
 int parkTime = 0.5;
 int stuffTime = 2;
@@ -15,6 +16,7 @@ int stuffTime = 2;
 int ticketAmount = 20;
 int ticketFrequency = 5;
 int count;
+int seatCount = 5;
 
 std::vector<Visitor *> visitors;
 std::vector<ParkingSpot *> parkingSpots;
@@ -36,12 +38,12 @@ int main(int argc, char **argv)
 
     ParkingLot *parkingLot = new ParkingLot(count);
     TicketBooth *ticketBooth = new TicketBooth(ticketAmount, ticketFrequency);
-
-
     Gate *gate = new Gate();
+    Attraction *attraction = new Attraction(seatCount);
+    
     for(auto i = 0; i < count+2 ; i++)
     {
-        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate, *ticketBooth);
+        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate, *ticketBooth, *attraction);
         visitors.push_back(p);
     }
     std::thread tu(&Ui::update, new Ui(visitors, parkingLot, ticketBooth));

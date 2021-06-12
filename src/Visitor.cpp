@@ -8,9 +8,15 @@ void Visitor::live()
     {
         waitParking();
         park(parkTime);
-        waitTickets();
-        getTickets(parkTime);
-        rideAttraction(stuffTime);
+
+        while(amountOfRides > 0)
+        {
+            waitTickets();
+            getTickets(parkTime);
+            waitAttraction();
+            rideAttraction(stuffTime);
+        }
+
         leaveParking(parkTime);
         exit=true;
     }
@@ -19,6 +25,8 @@ void Visitor::live()
 void Visitor::waitParking()
 {
     action = VisitorAction::waitingForSpots;
+
+    amountOfRides = std::uniform_int_distribution<int>(1, 3)(rng);
 
     while (!exit)
     {
@@ -110,8 +118,35 @@ void Visitor::getTickets(int time)
 
 }
 
+void Visitor::waitAttraction()
+{
+    action = VisitorAction::waitingForAttraction;
+    
+    if(exit)
+    {
+        return;
+    }
+
+    
+    std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
+    attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats > 0;});
+
+    attraction.emptySeats--; 
+}
+
+
+
 void Visitor::rideAttraction(int time)
 {
+    for(Seat* seat : attraction.seats)
+    {        
+        if(seat->mtx.try_lock())
+        {
+        ownSeat = seat;
+        break;
+        }
+    }
+
     action = VisitorAction::ridingAttraction;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
     for(auto i = 1; i < part; i++)
@@ -125,6 +160,11 @@ void Visitor::rideAttraction(int time)
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+
+    amountOfRides--;
+    ownSeat->mtx.unlock();
+    attraction.emptySeats++;
+    attraction.cv.notify_all();
 }
 
 void Visitor::leaveParking(int time)
