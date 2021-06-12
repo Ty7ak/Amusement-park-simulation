@@ -2,6 +2,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <vector>
+#include <atomic>
 
 #include "Seat.hpp"
 
@@ -13,7 +14,7 @@ class Attraction
         std::mutex m_entry;
         std::mutex m_leave;
         std::vector<Seat*> seats;
-        int emptySeats;
-        int seatCount;
+        std::atomic<int> emptySeats;
+        std::atomic<int> seatCount;
  
 };

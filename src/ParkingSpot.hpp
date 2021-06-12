@@ -1,10 +1,11 @@
 #pragma once
 #include <mutex>
+#include <atomic>
 
 class ParkingSpot
 {
     public: 
-        int id;
+        std::atomic<int> id;
         std::mutex mtx;
         ParkingSpot(int i): id(i){};
 };

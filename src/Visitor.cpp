@@ -1,4 +1,3 @@
-#pragma once
 #include "Visitor.hpp"
 #include "ParkingSpot.hpp"
 
@@ -14,7 +13,7 @@ void Visitor::live()
             waitTickets();
             getTickets(parkTime);
             waitAttraction();
-            rideAttraction(stuffTime);
+            rideAttraction(rideTime);
         }
 
         leaveParking(parkTime);

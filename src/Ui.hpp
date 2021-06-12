@@ -13,8 +13,9 @@ class Ui
         std::mutex m;
         TicketBooth *ticketBooth;
         ParkingLot *parkingLot;
+        Attraction *attraction;
         std::vector<Visitor *>  visitors;
-        Ui(std::vector<Visitor *> p, ParkingLot *pl, TicketBooth *tb);
+        Ui(std::vector<Visitor *> p, ParkingLot *pl, TicketBooth *tb, Attraction *at);
         ~Ui();
         void update();
 };

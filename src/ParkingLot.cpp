@@ -1,4 +1,3 @@
-#pragma once
 #include "ParkingLot.hpp"
 
 ParkingLot::ParkingLot(int count)

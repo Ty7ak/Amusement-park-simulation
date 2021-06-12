@@ -1,4 +1,3 @@
-#pragma once
 #include <ncurses.h>
 #include <iostream>
 #include <vector>
@@ -11,7 +10,7 @@
 #include "Attraction.hpp"
 
 int parkTime = 0.5;
-int stuffTime = 2;
+int rideTime = 2;
 
 int ticketAmount = 20;
 int ticketFrequency = 5;
@@ -43,10 +42,10 @@ int main(int argc, char **argv)
     
     for(auto i = 0; i < count+2 ; i++)
     {
-        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate, *ticketBooth, *attraction);
+        Visitor *p = new Visitor(i + 1, parkTime, rideTime, *parkingLot, *gate, *ticketBooth, *attraction);
         visitors.push_back(p);
     }
-    std::thread tu(&Ui::update, new Ui(visitors, parkingLot, ticketBooth));
+    std::thread tu(&Ui::update, new Ui(visitors, parkingLot, ticketBooth, attraction));
 
     tu.join();
 

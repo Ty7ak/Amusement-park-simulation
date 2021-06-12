@@ -15,7 +15,7 @@ class TicketBooth
         std::thread t;
         std::condition_variable cv;
         std::mutex mtx;
-        int progress = 0;
+        std::atomic<int> progress {0};
         int ticketsPerResupply;
         int ticketsFrequency;
         bool exit = false;

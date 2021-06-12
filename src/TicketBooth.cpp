@@ -1,4 +1,3 @@
-#pragma once
 #include "TicketBooth.hpp"
 #include <iostream>
 
