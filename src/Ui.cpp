@@ -28,16 +28,17 @@ Ui::~Ui()
 void Ui::update()
 {
     while(true)
-    {
+    {   
         int c = getch();
         if(c == 113)
         {   
-            ticketBooth->exit = true;
+            ticketBooth->exit = true;            
             for(auto p : visitors)
             {
                 p->exit = true;
             }
             return;
+            
         }
 
         attron(COLOR_PAIR(5));
@@ -47,7 +48,7 @@ void Ui::update()
         mvprintw(1, 60, "Press q to exit");  
 
         mvprintw(2, 60, "Parking spots left %3d/%3d", parkingLot->emptySpots.load(), parkingLot->spotsCount.load());
-        mvprintw(3, 60, "Ride spots left %d", attraction->emptySeats.load());
+        mvprintw(3, 60, "Ride spots left %2d", attraction->emptySeats.load());
         mvprintw(4, 60, "Tickets left %d", ticketBooth->ticketsLeft.load());
 
         attroff(COLOR_PAIR(5));
@@ -130,7 +131,6 @@ void Ui::update()
                     clrtoeol();    
                 }
             }                 
-            refresh();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }

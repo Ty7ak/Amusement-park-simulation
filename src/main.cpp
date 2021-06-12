@@ -9,13 +9,14 @@
 #include "ParkingSpot.hpp"
 #include "Attraction.hpp"
 
-int parkTime = 0.5;
-int rideTime = 2;
+int count;
+int parkTime = 1;
+int rideTime = 3;
 
 int ticketAmount = 20;
 int ticketFrequency = 5;
-int count;
-int seatCount = 5;
+
+int seatCount = 1;
 
 std::vector<Visitor *> visitors;
 std::vector<ParkingSpot *> parkingSpots;
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
     Gate *gate = new Gate();
     Attraction *attraction = new Attraction(seatCount);
     
-    for(auto i = 0; i < count+2 ; i++)
+    for(auto i = 0; i < count + 2 ; i++)
     {
         Visitor *p = new Visitor(i + 1, parkTime, rideTime, *parkingLot, *gate, *ticketBooth, *attraction);
         visitors.push_back(p);

@@ -8,7 +8,7 @@ void Visitor::live()
         waitParking();
         park(parkTime);
 
-        while(amountOfRides > 0)
+        while(amountOfRides > 0 && !exit)
         {
             waitTickets();
             getTickets(parkTime);
@@ -21,20 +21,22 @@ void Visitor::live()
     }
 }
 
-void Visitor::waitParking()
+void Visitor::waitParking() 
 {
     action = VisitorAction::waitingForSpots;
 
     amountOfRides = std::uniform_int_distribution<int>(1, 3)(rng);
 
-    while (!exit)
-    {
-        std::unique_lock<std::mutex> wait_lock(gate.m_entry);
-        gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0;});
+    std::unique_lock<std::mutex> wait_lock(gate.m_entry);
+    gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0 || exit!=false;});
 
-        parkingLot.emptySpots--;
-        break;    
+    if (exit == true)
+    {
+        gate.m_entry.unlock();
+        return;
     }
+
+    parkingLot.emptySpots--;
     
 }
 
@@ -80,7 +82,13 @@ void Visitor::waitTickets()
 
     
     std::unique_lock<std::mutex> wait_lock(booth.mtx);
-    booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft > 0;});
+    booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft > 0 || exit!=false;});
+
+    if (exit == true)
+        {
+            wait_lock.unlock();
+            return;
+        }
 
     booth.ticketsLeft--;
     
@@ -128,7 +136,13 @@ void Visitor::waitAttraction()
 
     
     std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
-    attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats > 0;});
+    attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats > 0 || exit!=false;});
+
+    if (exit == true)
+        {
+            wait_lock.unlock();
+            return;
+        }
 
     attraction.emptySeats--; 
 }
