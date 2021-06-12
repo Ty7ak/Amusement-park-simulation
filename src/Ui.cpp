@@ -1,10 +1,11 @@
 #pragma once
 #include "Ui.hpp"
 
-Ui::Ui(std::vector<Visitor *> p, TicketBooth *tb)
+Ui::Ui(std::vector<Visitor *> p, ParkingLot *pl, TicketBooth *tb)
 {
     visitors = p;
     ticketBooth = tb;
+    parkingLot = pl;
     initscr();
     noecho();
     raw();
@@ -39,15 +40,17 @@ void Ui::update()
             return;
         }
 
+        attron(COLOR_PAIR(5));
         mvprintw(0, 18, "|---------------------------|");
         mvprintw(1, 18, "|    Maciej Tylak 248884    |");
         mvprintw(2, 18, "|---------------------------|");
         mvprintw(1, 60, "Press q to exit");  
 
-        attron(COLOR_PAIR(5));
-        mvprintw(3, 60, "Parking spots %d/%d", visitors[0]->parkingLot.emptySpots, visitors[0]->parkingLot.spotsCount);
-        mvprintw(4, 60, "Tickets left %d", ticketBooth->ticketsLeft);
+        mvprintw(3, 60, "Parking spots left %3d/%3d", parkingLot->emptySpots, parkingLot->spotsCount);
+        mvprintw(4, 60, "Tickets left %d", ticketBooth->ticketsLeft.load());
         attroff(COLOR_PAIR(5));
+        refresh();
+
         clrtoeol();
 
         for(auto p : visitors)
@@ -75,15 +78,23 @@ void Ui::update()
              else if(p->action == VisitorAction::waitingForTickets)
             {
                 attron(COLOR_PAIR(1));
-                mvprintw(4 + p->id, 0,"Visitor %d is waiting for Tickets", p->id);
+                mvprintw(4 + p->id, 0,"Visitor %d is waiting for a ticket", p->id);
                 attroff(COLOR_PAIR(1));
                 clrtoeol();
             }
 
-            else if(p->action == VisitorAction::doingStuff)
+            else if(p->action == VisitorAction::gettingTickets)
+            {
+                attron(COLOR_PAIR(3));
+                mvprintw(4 + p->id, 0,"Visitor %d is getting a ticket", p->id);
+                attroff(COLOR_PAIR(3));
+                clrtoeol();
+            }
+
+            else if(p->action == VisitorAction::ridingAttraction)
             {
                 attron(COLOR_PAIR(2));
-                mvprintw(4 + p->id, 0,"Visitor %d is doing Stuff", p->id);
+                mvprintw(4 + p->id, 0,"Visitor %d is having fun!", p->id);
                 mvprintw(4 + p->id, 40, "Spot #%d", p->parkingSpot->id+1);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(2));

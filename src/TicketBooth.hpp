@@ -3,6 +3,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <atomic>
 
 #include "Ticket.hpp"
 
@@ -10,7 +11,7 @@ class TicketBooth
 {
     public:
         std::vector<Ticket*> tickets;
-        int ticketsLeft = 0;
+        std::atomic<int> ticketsLeft{0};
         std::thread t;
         std::condition_variable cv;
         std::mutex mtx;

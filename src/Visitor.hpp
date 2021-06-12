@@ -16,7 +16,7 @@ enum class VisitorAction
     waitingForSpots,
     waitingForTickets,
     gettingTickets,
-    doingStuff,
+    ridingAttraction,
     Leaving   
 };
 
@@ -30,6 +30,7 @@ class Visitor
         Gate &gate;
         TicketBooth &booth;
         ParkingSpot *parkingSpot;
+        Ticket *ownTicket;
         std::condition_variable cv;
         std::thread t;
         std::mt19937 rng{std::random_device{}()};
@@ -43,7 +44,7 @@ class Visitor
         void park(int parkTime);
         void waitParking();
         void waitTickets();
-        void doStuff(int stuffTime);
+        void rideAttraction(int stuffTime);
         void getTickets(int parkTime);
         void leaveParking(int parkTime);
     

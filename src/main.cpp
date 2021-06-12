@@ -10,9 +10,9 @@
 #include "ParkingSpot.hpp"
 
 int parkTime = 0.5;
-int stuffTime = 10;
+int stuffTime = 2;
 
-int ticketAmount = 2;
+int ticketAmount = 20;
 int ticketFrequency = 5;
 int count;
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
         Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate, *ticketBooth);
         visitors.push_back(p);
     }
-    std::thread tu(&Ui::update, new Ui(visitors, ticketBooth));
+    std::thread tu(&Ui::update, new Ui(visitors, parkingLot, ticketBooth));
 
     tu.join();
 

@@ -9,7 +9,8 @@ void Visitor::live()
         waitParking();
         park(parkTime);
         waitTickets();
-        doStuff(stuffTime);
+        getTickets(parkTime);
+        rideAttraction(stuffTime);
         leaveParking(parkTime);
         exit=true;
     }
@@ -18,17 +19,15 @@ void Visitor::live()
 void Visitor::waitParking()
 {
     action = VisitorAction::waitingForSpots;
-    
-    if(exit)
+
+    while (!exit)
     {
-        return;
+        std::unique_lock<std::mutex> wait_lock(gate.m_entry);
+        gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0;});
+
+        parkingLot.emptySpots--;
+        break;    
     }
-
-    
-    std::unique_lock<std::mutex> wait_lock(gate.m_entry);
-    gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots > 0;});
-
-    parkingLot.emptySpots--;
     
 }
 
@@ -80,9 +79,40 @@ void Visitor::waitTickets()
     
 }
 
-void Visitor::doStuff(int time)
+void Visitor::getTickets(int time)
 {
-    action = VisitorAction::doingStuff;
+    std::unique_lock<std::mutex> parked_lock(booth.mtx);
+
+    for(Ticket* ticket : booth.tickets)
+    {        
+        if(ticket->mtx.try_lock())
+        {
+        ownTicket = ticket;
+        break;
+        }
+    }
+
+    action = VisitorAction::gettingTickets;
+    int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
+    for(auto i = 1; i < part; i++)
+    {
+        if(exit)
+        {
+            return;
+        }
+
+        progress = ((double)i/part) * 100; 
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+}
+
+void Visitor::rideAttraction(int time)
+{
+    action = VisitorAction::ridingAttraction;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
     for(auto i = 1; i < part; i++)
     {
