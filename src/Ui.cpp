@@ -1,9 +1,10 @@
 #pragma once
 #include "Ui.hpp"
 
-Ui::Ui(std::vector<Visitor *> p)
+Ui::Ui(std::vector<Visitor *> p, TicketBooth *tb)
 {
     visitors = p;
+    ticketBooth = tb;
     initscr();
     noecho();
     raw();
@@ -29,7 +30,8 @@ void Ui::update()
     {
         int c = getch();
         if(c == 113)
-        {
+        {   
+            ticketBooth->exit = true;
             for(auto p : visitors)
             {
                 p->exit = true;
@@ -43,7 +45,8 @@ void Ui::update()
         mvprintw(1, 60, "Press q to exit");  
 
         attron(COLOR_PAIR(5));
-        mvprintw(3, 60, "Empty spots: %d", visitors[0]->parkingLot.emptySpots);
+        mvprintw(3, 60, "Parking spots %d/%d", visitors[0]->parkingLot.emptySpots, visitors[0]->parkingLot.spotsCount);
+        mvprintw(4, 60, "Tickets left %d", ticketBooth->ticketsLeft);
         attroff(COLOR_PAIR(5));
         clrtoeol();
 
@@ -66,6 +69,14 @@ void Ui::update()
                 mvprintw(4 + p->id, 0,"Visitor %d is parking", p->id);
                 mvprintw(4 + p->id, 50 ," progress: %d %%", p->progress);
                 attroff(COLOR_PAIR(3));
+                clrtoeol();
+            }
+
+             else if(p->action == VisitorAction::waitingForTickets)
+            {
+                attron(COLOR_PAIR(1));
+                mvprintw(4 + p->id, 0,"Visitor %d is waiting for Tickets", p->id);
+                attroff(COLOR_PAIR(1));
                 clrtoeol();
             }
 

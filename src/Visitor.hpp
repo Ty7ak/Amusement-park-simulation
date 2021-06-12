@@ -8,11 +8,14 @@
 #include "ParkingSpot.hpp"
 #include "ParkingLot.hpp"
 #include "Gate.hpp"
+#include "TicketBooth.hpp"
 
 enum class VisitorAction
 {
     Parking,
     waitingForSpots,
+    waitingForTickets,
+    gettingTickets,
     doingStuff,
     Leaving   
 };
@@ -25,6 +28,7 @@ class Visitor
         int stuffTime;
         ParkingLot &parkingLot;
         Gate &gate;
+        TicketBooth &booth;
         ParkingSpot *parkingSpot;
         std::condition_variable cv;
         std::thread t;
@@ -34,11 +38,13 @@ class Visitor
         bool hasParking = false;
         bool exit = false;
 
-        Visitor(int i, int pt, int st, ParkingLot &lot, Gate &g): id(i), parkTime(pt), stuffTime(st), parkingLot(lot), gate(g), t(&Visitor::live, this) {};
+        Visitor(int i, int pt, int st, ParkingLot &lot, Gate &g, TicketBooth &tb): id(i), parkTime(pt), stuffTime(st), parkingLot(lot), gate(g), booth(tb), t(&Visitor::live, this) {};
         void live();
         void park(int parkTime);
         void waitParking();
+        void waitTickets();
         void doStuff(int stuffTime);
+        void getTickets(int parkTime);
         void leaveParking(int parkTime);
     
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include "Visitor.hpp"
 #include "ParkingSpot.hpp"
-#include <iostream>
 
 void Visitor::live()
 {
@@ -9,6 +8,7 @@ void Visitor::live()
     {
         waitParking();
         park(parkTime);
+        waitTickets();
         doStuff(stuffTime);
         leaveParking(parkTime);
         exit=true;
@@ -61,6 +61,23 @@ void Visitor::park(int time)
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
+}
+
+void Visitor::waitTickets()
+{
+    action = VisitorAction::waitingForTickets;
+    
+    if(exit)
+    {
+        return;
+    }
+
+    
+    std::unique_lock<std::mutex> wait_lock(booth.mtx);
+    booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft > 0;});
+
+    booth.ticketsLeft--;
+    
 }
 
 void Visitor::doStuff(int time)

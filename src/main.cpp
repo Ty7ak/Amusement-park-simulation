@@ -11,6 +11,9 @@
 
 int parkTime = 0.5;
 int stuffTime = 10;
+
+int ticketAmount = 2;
+int ticketFrequency = 5;
 int count;
 
 std::vector<Visitor *> visitors;
@@ -32,23 +35,26 @@ int main(int argc, char **argv)
     }
 
     ParkingLot *parkingLot = new ParkingLot(count);
+    TicketBooth *ticketBooth = new TicketBooth(ticketAmount, ticketFrequency);
+
 
     Gate *gate = new Gate();
-    
     for(auto i = 0; i < count+2 ; i++)
     {
-        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate);
+        Visitor *p = new Visitor(i + 1, parkTime, stuffTime, *parkingLot, *gate, *ticketBooth);
         visitors.push_back(p);
     }
-
-    std::thread tu(&Ui::update, new Ui(visitors));
+    std::thread tu(&Ui::update, new Ui(visitors, ticketBooth));
 
     tu.join();
+
+    ticketBooth->t.join();
 
     for(auto p : visitors)
     {
         p->t.join();
     }
+
     endwin(); 
 
     return 0;

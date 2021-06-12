@@ -9,4 +9,5 @@ class ParkingLot
         std::vector<ParkingSpot*> parkingSpots;
         ParkingLot(int count);
         int emptySpots = 0;
+        int spotsCount = 0;
 };

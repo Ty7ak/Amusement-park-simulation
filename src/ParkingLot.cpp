@@ -9,4 +9,5 @@ ParkingLot::ParkingLot(int count)
         parkingSpots.push_back(parkingSpot);
         emptySpots++;
     }
+    spotsCount = count; 
 }
