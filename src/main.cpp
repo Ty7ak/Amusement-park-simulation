@@ -11,14 +11,14 @@
 
 int count;
 int parkingSpotCount = 10;
-float parkTime = 1.0;
+float parkTime = 0.5;
 float rideTime = 3.0;
-float ticketTime = 1.0;
+float ticketTime = 0.5;
 
-int ticketAmount = 2;
-int ticketFrequency = 1;
+int ticketAmount = 4;
+int ticketFrequency = 2;
 
-int seatCount = 2;
+int seatCount = 5;
 
 std::vector<Visitor *> visitors;
 std::vector<ParkingSpot *> parkingSpots;

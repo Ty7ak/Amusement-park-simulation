@@ -21,9 +21,12 @@ void TicketBooth::createTickets()
 
     for(int i = 0; i < ticketsPerResupply; i++)
     {
-        Ticket *ticket = new Ticket();
-        tickets.push_back(ticket);
-        ticketsLeft++;
+        if(ticketsLeft < 99)
+        {
+            Ticket *ticket = new Ticket();
+            tickets.push_back(ticket);
+            ticketsLeft++;
+        }
 
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
