@@ -57,7 +57,7 @@ void Visitor::park(float time)
 
     action = VisitorAction::Parking;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
-    for(auto i = 1; i < part; i++)
+    for(auto i = 1; i <= part; i++)
     {
         if(exit.load())
         {
@@ -69,7 +69,7 @@ void Visitor::park(float time)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 }
 
@@ -116,23 +116,21 @@ void Visitor::getTickets(float time)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 }
 
 void Visitor::waitAttraction()
 {
     action = VisitorAction::waitingForAttraction;
-    
+
     std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
-    attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats.load() > 0 || exit.load()!=false;});
-
-    if (exit.load() == true)
-        {
-            return;
-        }
-
-    attraction.emptySeats--; 
+    while(exit.load()!=true)
+    {
+        attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats.load() > 0;});
+        return;
+        
+    }    
 }
 
 
@@ -144,6 +142,7 @@ void Visitor::rideAttraction(float time)
         if(seat->mtx.try_lock())
         {
         ownSeat = seat;
+        attraction.emptySeats--; 
         break;
         }
     }
@@ -165,16 +164,16 @@ void Visitor::rideAttraction(float time)
     amountOfRides--;
     ownSeat->mtx.unlock();
     attraction.emptySeats++;
-    attraction.cv.notify_all();
+    attraction.cv.notify_one();
 }
 
 void Visitor::leaveParking(float time)
 {
+    action = VisitorAction::Leaving;
     std::unique_lock<std::mutex> wait_lock(gate.m_leave);
     
-    action = VisitorAction::Leaving;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);
-    for(auto i = 1; i < part; i++)
+    for(auto i = 1; i <= part; i++)
     {
         if(exit.load())
         {
@@ -186,10 +185,10 @@ void Visitor::leaveParking(float time)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     
     parkingSpot->mtx.unlock();
     parkingLot.emptySpots++;
-    gate.cv.notify_all();
+    gate.cv.notify_one();
 }
 

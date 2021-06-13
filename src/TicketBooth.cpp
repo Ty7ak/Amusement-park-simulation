@@ -27,7 +27,7 @@ void TicketBooth::createTickets()
 
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    cv.notify_all();
+    cv.notify_one();
     }
     
 }

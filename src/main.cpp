@@ -10,13 +10,13 @@
 #include "Attraction.hpp"
 
 int count;
-int parkingSpotCount = 2;
-float parkTime = 2.0;
-float rideTime = 4.0;
-float ticketTime = 2.0;
+int parkingSpotCount = 10;
+float parkTime = 1.0;
+float rideTime = 3.0;
+float ticketTime = 1.0;
 
-int ticketAmount = 1;
-int ticketFrequency = 2;
+int ticketAmount = 2;
+int ticketFrequency = 1;
 
 int seatCount = 2;
 
