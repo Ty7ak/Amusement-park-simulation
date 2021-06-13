@@ -13,7 +13,7 @@ void Visitor::live()
         while(amountOfRides > 0 && !exit.load())
         {
             waitTickets();
-            getTickets(parkTime);
+            getTickets(ticketTime);
             waitAttraction();
             rideAttraction(rideTime);
         }

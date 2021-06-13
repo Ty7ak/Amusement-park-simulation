@@ -26,6 +26,7 @@ class Visitor
         std::atomic<int> id;
         int parkTime;
         int rideTime;
+        int ticketTime;
         int amountOfRides;
 
         ParkingLot &parkingLot;
@@ -43,8 +44,8 @@ class Visitor
         std::atomic<int> progress {0};
         std::atomic<bool> exit {false};
 
-        Visitor(int i, int pt, int st, ParkingLot &lot, Gate &g, TicketBooth &tb, Attraction &at): 
-        id(i), parkTime(pt), rideTime(st), parkingLot(lot), gate(g), booth(tb), attraction(at), t(&Visitor::live, this) {};
+        Visitor(int i, int pt, int st, int tt, ParkingLot &lot, Gate &g, TicketBooth &tb, Attraction &at): 
+        id(i), parkTime(pt), rideTime(st), ticketTime(tt), parkingLot(lot), gate(g), booth(tb), attraction(at), t(&Visitor::live, this) {};
 
         void live();
         void park(int parkTime);

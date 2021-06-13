@@ -38,7 +38,6 @@ void Ui::update()
     wp_y = 8;
     WINDOW *parkingW = newwin(wp_height, wp_width, wp_x, wp_y);
     refresh();
-
     box(parkingW, 0, 0);
     wprintw(parkingW, "Waiting for Parking");
     wrefresh(parkingW);
