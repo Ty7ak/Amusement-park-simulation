@@ -110,7 +110,7 @@ void Ui::update()
             else if(p->action == VisitorAction::waitingForTickets)
             {
                 attron(COLOR_PAIR(2));
-                mvprintw(3+p->id.load(), 42 ,"[%2d]", p->id.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 42 ,"[%2d]", p->id.load());
                 attroff(COLOR_PAIR(2));
                 clrtoeol();
             }
@@ -118,8 +118,8 @@ void Ui::update()
             else if(p->action == VisitorAction::gettingTickets)
             {
                 attron(COLOR_PAIR(3));
-                mvprintw(3+p->id.load(), 63,"[%2d]", p->id.load());
-                mvprintw(3+p->id.load(), 68 ,"%d%%", p->progress.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 63,"[%2d]", p->id.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 68 ,"%d%%", p->progress.load());
                 attroff(COLOR_PAIR(3));
                 clrtoeol();
             }
@@ -127,7 +127,7 @@ void Ui::update()
             else if(p->action == VisitorAction::waitingForAttraction)
             {
                 attron(COLOR_PAIR(2));
-                mvprintw(3+p->id.load(), 83,"[%2d]", p->id.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 83,"[%2d]", p->id.load());
                 //mvprintw(3+wtAmount, 86,"Rides left: %d", p->amountOfRides.load());
                 attroff(COLOR_PAIR(2));
                 clrtoeol();
@@ -136,8 +136,8 @@ void Ui::update()
             else if(p->action == VisitorAction::ridingAttraction)
             {
                 attron(COLOR_PAIR(4));
-                mvprintw(3+p->id.load(), 102,"[%2d]", p->id.load());
-                mvprintw(3+p->id.load(), 107,"%d%%", p->progress.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 102,"[%2d]", p->id.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 107,"%d%%", p->progress.load());
                 //mvprintw(3+p->id.load(), 70,"Rides left: %d", p->amountOfRides.load());
                 attroff(COLOR_PAIR(4));
                 clrtoeol();
@@ -145,8 +145,8 @@ void Ui::update()
             else if(p->action == VisitorAction::Leaving)
             {
                 attron(COLOR_PAIR(5));
-                mvprintw(3+p->id.load(), 117,"[%2d]", p->id.load());
-                mvprintw(3+p->id.load(), 123,"%d%%", p->progress.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 117,"[%2d]", p->id.load());
+                mvprintw(3+p->parkingSpot->id.load()+1, 123,"%d%%", p->progress.load());
                 attroff(COLOR_PAIR(5));
                 clrtoeol();
             }

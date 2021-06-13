@@ -7,14 +7,14 @@ void Visitor::live()
 {
     while(!exit.load())
     {
-        waitParking();
+        //waitParking();
         park(parkTime);
 
         while(amountOfRides > 0 && !exit.load())
         {
-            waitTickets();
+            //waitTickets();
             getTickets(ticketTime);
-            waitAttraction();
+            //waitAttraction();
             rideAttraction(rideTime);
         }
 
@@ -24,26 +24,37 @@ void Visitor::live()
     }
 }
 
-void Visitor::waitParking() 
+// void Visitor::waitParking() 
+// {
+//     action = VisitorAction::waitingForSpots;
+
+//     amountOfRides = std::uniform_int_distribution<int>(1, 3)(rng);
+
+//     std::unique_lock<std::mutex> wait_lock(gate.m_entry);
+    
+
+//     gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots.load() > 0 || exit.load()!=true;});
+//     return;
+
+
+// }
+
+void Visitor::park(float time)
 {
+
     action = VisitorAction::waitingForSpots;
 
     amountOfRides = std::uniform_int_distribution<int>(1, 3)(rng);
 
     std::unique_lock<std::mutex> wait_lock(gate.m_entry);
+    
 
-    while(exit.load()!=true)
+    gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots.load() > 0 || exit.load()==true;});
+
+    if(exit.load()==true)
     {
-        gate.cv.wait(wait_lock, [&]() {return parkingLot.emptySpots.load() > 0;});
         return;
-        
     }
-
-}
-
-void Visitor::park(float time)
-{
-    std::unique_lock<std::mutex> parked_lock(gate.m_entry);
 
     for(ParkingSpot* spot : parkingLot.parkingSpots)
     {        
@@ -73,24 +84,37 @@ void Visitor::park(float time)
 
 }
 
-void Visitor::waitTickets()
-{
-    action = VisitorAction::waitingForTickets;
+// void Visitor::waitTickets()
+// {
+//     action = VisitorAction::waitingForTickets;
         
-    std::unique_lock<std::mutex> wait_lock(booth.mtx);
-    while(exit.load()!=true)
-    {
-        booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft.load() > 0;});
-        return;
+//     std::unique_lock<std::mutex> wait_lock(booth.mtx);
+//     while(exit.load()!=true)
+//     {
+//         booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft.load() > 0;});
+//         return;
         
-    }
+//     }
 
-}    
+// }    
     
 
 void Visitor::getTickets(float time)
+
 {
-    std::unique_lock<std::mutex> get_lock(booth.mtx);
+
+    action = VisitorAction::waitingForTickets;
+        
+    std::unique_lock<std::mutex> wait_lock(booth.mtx);
+
+    booth.cv.wait(wait_lock, [&]() {return booth.ticketsLeft.load() > 0 || exit.load()==true;});
+
+    if(exit.load()==true)
+    {
+        return;
+    }
+
+
     booth.ticketsLeft--;
 
     for(Ticket* ticket : booth.tickets)
@@ -120,23 +144,35 @@ void Visitor::getTickets(float time)
 
 }
 
-void Visitor::waitAttraction()
-{
-    action = VisitorAction::waitingForAttraction;
+// void Visitor::waitAttraction()
+// {
+//     action = VisitorAction::waitingForAttraction;
 
-    std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
-    while(exit.load()!=true)
-    {
-        attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats.load() > 0;});
-        return;
+//     std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
+//     while(exit.load()!=true)
+//     {
+//         attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats.load() > 0;});
+//         return;
         
-    }    
-}
+//     }    
+// }
 
 
 
 void Visitor::rideAttraction(float time)
 {
+
+    action = VisitorAction::waitingForAttraction;
+
+    std::unique_lock<std::mutex> wait_lock(attraction.m_entry);
+
+    attraction.cv.wait(wait_lock, [&]() {return attraction.emptySeats.load() > 0 || exit.load()==true;});
+
+    if(exit.load()==true)
+    {
+        return;
+    }
+
     for(Seat* seat : attraction.seats)
     {        
         if(seat->mtx.try_lock())
@@ -146,6 +182,8 @@ void Visitor::rideAttraction(float time)
         break;
         }
     }
+
+    wait_lock.unlock();
 
     action = VisitorAction::ridingAttraction;
     int part = std::uniform_int_distribution<int>(int(10*0.8*time), int(10*1.2*time))(rng);

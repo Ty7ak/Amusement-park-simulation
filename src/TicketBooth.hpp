@@ -18,9 +18,9 @@ class TicketBooth
         std::atomic<int> progress {0};
         int ticketsPerResupply;
         int ticketsFrequency;
-        bool exit = false;
+        bool *exit;
 
-        TicketBooth(int i, int f): ticketsPerResupply(i), ticketsFrequency(f), t(&TicketBooth::createTickets, this){};
+        TicketBooth(int i, int f, bool *ext): ticketsPerResupply(i), ticketsFrequency(f), exit(ext), t(&TicketBooth::createTickets, this){};
 
         void createTickets();
 
