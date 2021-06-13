@@ -17,17 +17,18 @@ enum class VisitorAction
     gettingTickets,
     waitingForAttraction,
     ridingAttraction,
-    Leaving   
+    Leaving,
+    Left   
 };
 
 class Visitor
 {
     public:
         std::atomic<int> id;
-        int parkTime;
-        int rideTime;
-        int ticketTime;
-        int amountOfRides;
+        float parkTime;
+        float rideTime;
+        float ticketTime;
+        std::atomic<int> amountOfRides;
 
         ParkingLot &parkingLot;
         Gate &gate;
@@ -44,17 +45,17 @@ class Visitor
         std::atomic<int> progress {0};
         std::atomic<bool> exit {false};
 
-        Visitor(int i, int pt, int st, int tt, ParkingLot &lot, Gate &g, TicketBooth &tb, Attraction &at): 
+        Visitor(int i, float pt, float st, float tt, ParkingLot &lot, Gate &g, TicketBooth &tb, Attraction &at): 
         id(i), parkTime(pt), rideTime(st), ticketTime(tt), parkingLot(lot), gate(g), booth(tb), attraction(at), t(&Visitor::live, this) {};
 
         void live();
-        void park(int parkTime);
+        void park(float parkTime);
         void waitParking();
         void waitTickets();
-        void rideAttraction(int rideTime);
+        void rideAttraction(float rideTime);
         void waitAttraction();
-        void getTickets(int parkTime);
-        void leaveParking(int parkTime);
+        void getTickets(float ticketTime);
+        void leaveParking(float parkTime);
 
         void shutdown();
     

@@ -19,6 +19,7 @@ void Visitor::live()
         }
 
         leaveParking(parkTime);
+        action = VisitorAction::Left;
         exit=true;
     }
 }
@@ -40,16 +41,16 @@ void Visitor::waitParking()
 
 }
 
-void Visitor::park(int time)
+void Visitor::park(float time)
 {
     std::unique_lock<std::mutex> parked_lock(gate.m_entry);
-    parkingLot.emptySpots--;
 
     for(ParkingSpot* spot : parkingLot.parkingSpots)
     {        
         if(spot->mtx.try_lock())
         {
         parkingSpot = spot;
+        parkingLot.emptySpots--;
         break;
         }
     }
@@ -87,7 +88,7 @@ void Visitor::waitTickets()
 }    
     
 
-void Visitor::getTickets(int time)
+void Visitor::getTickets(float time)
 {
     std::unique_lock<std::mutex> get_lock(booth.mtx);
     booth.ticketsLeft--;
@@ -136,7 +137,7 @@ void Visitor::waitAttraction()
 
 
 
-void Visitor::rideAttraction(int time)
+void Visitor::rideAttraction(float time)
 {
     for(Seat* seat : attraction.seats)
     {        
@@ -167,7 +168,7 @@ void Visitor::rideAttraction(int time)
     attraction.cv.notify_all();
 }
 
-void Visitor::leaveParking(int time)
+void Visitor::leaveParking(float time)
 {
     std::unique_lock<std::mutex> wait_lock(gate.m_leave);
     
