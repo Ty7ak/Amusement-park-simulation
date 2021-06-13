@@ -18,6 +18,7 @@ Ui::Ui(std::vector<Visitor *> p, ParkingLot *pl, TicketBooth *tb, Attraction *at
     init_pair(3, COLOR_GREEN, -1);
     init_pair(4, COLOR_MAGENTA, -1);
     init_pair(5, COLOR_WHITE, -1);
+
 }
 
 Ui::~Ui()
@@ -27,16 +28,33 @@ Ui::~Ui()
 
 void Ui::update()
 {
+/*
+    // Wait for parking box //
+    int amountWP = 0;
+    int wp_height, wp_width, wp_x, wp_y;
+    wp_height = 20;
+    wp_width = 20;
+    wp_x = 8;
+    wp_y = 8;
+    WINDOW *parkingW = newwin(wp_height, wp_width, wp_x, wp_y);
+    refresh();
+
+    box(parkingW, 0, 0);
+    wprintw(parkingW, "Waiting for Parking");
+    wrefresh(parkingW);
+*/
+
     while(true)
     {   
+        int amountWP = 0;
         int c = getch();
         if(c == 113)
-        {             
+        {            
+            ticketBooth->exit = true;   
             for(auto p : visitors)
             {
                 p->exit = true;
             }
-            ticketBooth->exit = true;  
             return;
             
         }
@@ -54,8 +72,26 @@ void Ui::update()
         attroff(COLOR_PAIR(5));
         refresh();
 
+    /*
         clrtoeol();
+        werase(parkingW);
+        for(auto p : visitors)
+        {
+            clrtoeol();
+            attron(COLOR_PAIR((int)p->action));
+            if(p->action == VisitorAction::waitingForSpots)
+            {
+                amountWP++;
+                attron(COLOR_PAIR(1));
+                mvwprintw(parkingW, amountWP,  1, "[%2d]", p->id.load());
+                attroff(COLOR_PAIR(1));
+                clrtoeol();
+                wrefresh(parkingW);
+            }              
+        }
+    */
 
+        
         for(auto p : visitors)
         {
             move(4 + p->id, 0);
@@ -132,6 +168,7 @@ void Ui::update()
                 }
             }                 
         }
+        
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }

@@ -10,11 +10,11 @@
 #include "Attraction.hpp"
 
 int count;
-int parkTime = 0.2;
-int rideTime = 3;
+int parkTime = 1;
+int rideTime = 0.5;
 
-int ticketAmount = 2;
-int ticketFrequency = 2;
+int ticketAmount = 3;
+int ticketFrequency = 1;
 
 int seatCount = 1;
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     Gate *gate = new Gate();
     Attraction *attraction = new Attraction(seatCount);
     
-    for(auto i = 0; i < count+2 ; i++)
+    for(auto i = 0; i < count ; i++)
     {
         Visitor *p = new Visitor(i + 1, parkTime, rideTime, *parkingLot, *gate, *ticketBooth, *attraction);
         visitors.push_back(p);
@@ -50,12 +50,12 @@ int main(int argc, char **argv)
 
     tu.join();
 
-    ticketBooth->t.join();
-
     for(auto p : visitors)
     {
         p->t.join();
     }
+
+    ticketBooth->t.join();
 
     endwin(); 
 
