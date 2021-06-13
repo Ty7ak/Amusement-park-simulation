@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <atomic>
 
 #include "ParkingLot.hpp"
 #include "Visitor.hpp"
@@ -39,15 +38,14 @@ int main(int argc, char **argv)
 
     }
 
-    std::atomic_bool *exit = new std::atomic_bool{false};
     ParkingLot *parkingLot = new ParkingLot(parkingSpotCount);
-    TicketBooth *ticketBooth = new TicketBooth(ticketAmount, ticketFrequency, *exit);
+    TicketBooth *ticketBooth = new TicketBooth(ticketAmount, ticketFrequency);
     Gate *gate = new Gate();
     Attraction *attraction = new Attraction(seatCount);
     
     for(auto i = 0; i < count ; i++)
     {
-        Visitor *p = new Visitor(i + 1, parkTime, rideTime, ticketTime, *parkingLot, *gate, *ticketBooth, *attraction, *exit);
+        Visitor *p = new Visitor(i + 1, parkTime, rideTime, ticketTime, *parkingLot, *gate, *ticketBooth, *attraction);
         visitors.push_back(p);
     }
     std::thread tu(&Ui::update, new Ui(visitors, parkingLot, ticketBooth, attraction));
